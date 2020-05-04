@@ -12,28 +12,16 @@ var mainWindow;
 var rcWindow;
 var rideName;
 
-function GetRideConstructionWindow() {
-	for (var i = 0; i < ui.windows; i++)
-	{
-		var w = ui.getWindow(i);
-		if (w.classification === 13)
-		{
-			return w;
-		}
+function GetWidget(widget) {
+    if (mainWindow !== null) {
+        return mainWindow.findWidget(widget.name);
 	}
 	return null;
-}
-
-function GetWidget(w, widget) {
-    if (w) {
-        return w.findWidget(widget.name);
-    }
 }
 
 function UpdateSpinner(widget, value) {
 	if (!widget) {return; }
 	widget.text = value.toString();
-	console.log(value.toString());
 }
 
 function createWidgets() {
@@ -60,8 +48,8 @@ function createWidgets() {
 		height: widgetHeight,
 		name: 'spinXOff',
 		text: offset.x.toString(),
-		onDecrement: function() {offset.x--; updateSpinner(GetWidget(mainWindow, xOffsetSpinner), offset.x)},
-		onIncrement: function() {offset.x++; updateSpinner(GetWidget(mainWindow, xOffsetSpinner), offset.x)},
+		onDecrement: function() {offset.x--; UpdateSpinner(GetWidget(mainWindow, xOffsetSpinner), offset.x)},
+		onIncrement: function() {offset.x++; UpdateSpinner(GetWidget(mainWindow, xOffsetSpinner), offset.x)},
 	};
 	
 	var yOffsetLabel = {
@@ -82,8 +70,8 @@ function createWidgets() {
 		height: widgetHeight,
 		name: 'spinYOff',
 		text: offset.y.toString(),
-		onDecrement: function() {offset.y--; updateSpinner(GetWidget(mainWindow, yOffsetSpinner), offset.y)},
-		onIncrement: function() {offset.y++; updateSpinner(GetWidget(mainWindow, yOffsetSpinner), offset.y)},
+		onDecrement: function() {offset.y--; UpdateSpinner(GetWidget(mainWindow, yOffsetSpinner), offset.y)},
+		onIncrement: function() {offset.y++; UpdateSpinner(GetWidget(mainWindow, yOffsetSpinner), offset.y)},
 	};
 	
 	var zOffsetLabel = {
@@ -104,8 +92,8 @@ function createWidgets() {
 		height: widgetHeight,
 		name: 'spinZOff',
 		text: offset.z.toString(),
-		onDecrement: function() {offset.z--; updateSpinner(GetWidget(mainWindow, zOffsetSpinner), offset.z)},
-		onIncrement: function() {offset.z++; updateSpinner(GetWidget(mainWindow, zOffsetSpinner), offset.z)},
+		onDecrement: function() {offset.z--; UpdateSpinner(GetWidget(mainWindow, zOffsetSpinner), offset.z)},
+		onIncrement: function() {offset.z++; UpdateSpinner(GetWidget(mainWindow, zOffsetSpinner), offset.z)},
 	};
 	
 	var copyCountLabel = {
@@ -126,8 +114,8 @@ function createWidgets() {
 		height: widgetHeight,
 		name: 'spinCopyCount',
 		text: copyCount.toString(),
-		onDecrement: function() {copyCount = Math.max(copyCount-1, MIN_COPIES); updateSpinner(GetWidget(mainWindow, copyCountSpinner), copyCount)},
-		onIncrement: function() {copyCount = Math.min(copyCount+1, MAX_COPIES); updateSpinner(GetWidget(mainWindow, copyCountSpinner), copyCount)},
+		onDecrement: function() {copyCount = Math.max(copyCount-1, MIN_COPIES); UpdateSpinner(GetWidget(mainWindow, copyCountSpinner), copyCount)},
+		onIncrement: function() {copyCount = Math.min(copyCount+1, MAX_COPIES); UpdateSpinner(GetWidget(mainWindow, copyCountSpinner), copyCount)},
 	};
 
 	var enableCheckbox = {
@@ -141,26 +129,6 @@ function createWidgets() {
 		isChecked: true,
 		onChange: function(isChecked) {if (isChecked) rcWindow = GetRideConstructionWindow()}
 	};
-
-	var attachButton = {
-		type: 'button',
-		x: 2,
-		y: 16 + (widgetHeight + 2) * 5,
-		width: 198,
-		height: widgetHeight,
-		name: 'attachButton',
-		text: "Attach to Ride",
-		onClick: function() {rcWindow = GetRideConstructionWindow()}
-	}
-
-	var rideLabel = {
-		type: 'label',
-		x: 2,
-		y: 16 + (widgetHeight + 2) * 6,
-		width: 198,
-		height: widgetHeight,
-		text: rideName
-	}
 	
 	Widgets.push(xOffsetSpinner);
 	Widgets.push(xOffsetLabel);
@@ -171,8 +139,6 @@ function createWidgets() {
 	Widgets.push(copyCountSpinner);
 	Widgets.push(copyCountLabel);
 	Widgets.push(enableCheckbox);
-	Widgets.push(attachButton);
-	Widgets.push(rideLabel);
 };
 
 var openWindow = function() {
