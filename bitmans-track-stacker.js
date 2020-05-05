@@ -9,8 +9,7 @@ var copyCount = MIN_COPIES;
 var offset = {x: 0, y: 0, z: 0};
 var Widgets;
 var mainWindow;
-var rcWindow;
-var rideName;
+var enabled = true;
 
 function GetWidget(widget) {
     if (mainWindow !== null) {
@@ -127,7 +126,7 @@ function createWidgets() {
 		name: 'chkEnable',
 		text: "Enabled",
 		isChecked: true,
-		onChange: function(isChecked) {if (isChecked) rcWindow = GetRideConstructionWindow()}
+		onChange: function(isChecked) {enabled=isChecked}
 	};
 	
 	Widgets.push(xOffsetSpinner);
@@ -141,7 +140,32 @@ function createWidgets() {
 	Widgets.push(enableCheckbox);
 };
 
+var onTrackPlaceAction = function(e) {
+	var x = e.result.position.x;
+	var y = e.result.position.y;
+	var z = e.result.position.z;
+}
+
+var onTrackRemoveAction = function(e) {
+
+}
+
+var onActionExecute = function(e) {
+	if (network.mode === "none"/* || e.player === network.currentPlayer*/)
+	{
+		if (e.type === 3 && e.result.expenditureType === "ride_construction")
+		{
+			console.log("placed a track piece");
+		}
+		if (e.type === 4 && e.result.expenditureType === "ride_construction")
+		{
+			console.log("removed a track piece");
+		}
+	}
+};
+
 var openWindow = function() {
+	context.subscribe("action.execute", onActionExecute);
 	createWidgets();
 	mainWindow = ui.openWindow({
 		classification: "custom.my",
