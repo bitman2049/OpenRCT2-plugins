@@ -1,4 +1,4 @@
-/// <reference path="C:/Users/aldra/Documents/source/repos/OpenRCT2/distribution/openrct2.d.ts" />
+/// <reference path="../../../source/repos/OpenRCT2/distribution/openrct2.d.ts" />
 
 // Bitman's Track Stacker, created 2020-05-01
 
