@@ -4,7 +4,18 @@
 
 var Widgets;
 var mainWindow;
-var Surfaces;
+var Tiles;
+var widgetHeight = 12;
+var playerWhite;
+var playerBlack;
+
+var ClearTile = function(tile)
+{
+    for (var i = 0; i < tile.elements.length; i++) {
+        if (tile.elements[i].type !== "surface")
+            tile.removeElement(i);
+    }
+}
 
 var GetSurfaceElement = function(tile)
 {
@@ -23,23 +34,21 @@ var CreateBoard = function(boardPos) {
     }
 
     var height = 0;
-    Surfaces = [];
+    Tiles = [];
     for (var i = 0; i < 4; i++) {
         for (var j = 0; j < 4; j++) {
-            var currTile = map.getTile(boardPos.x + i * 32, boardPos.y + j * 32);
+            var currTile = map.getTile(boardPos.x + j * 32, boardPos.y + i * 32);
             var currSurface = GetSurfaceElement(currTile);
-            height = Math.max(height, currSurface.height);
-            Surfaces.push(currSurface);
+            if (i == 0 && j == 0) {
+                height = currSurface.height;
+            } else {
+                currSurface.height = height;
+            }
+            currSurface.surfaceStyle = 5; // TERRAIN_CHECKERBOARD
+            ClearTile(currTile);
+            Tiles.push(currTile);
         }
     }
-
-    for (var i = 0; i < Surfaces.length; i++)
-    {
-        Surfaces[i].slope = 0;
-        Surfaces[i].height = height;
-        Surfaces[i].surfaceStyle = 5; // TERRAIN_CHECKERBOARD
-    }
-
 }
 
 var GetWidget = function(widget) {
@@ -49,21 +58,32 @@ var GetWidget = function(widget) {
 	return null;
 }
 
-var UpdateSpinner = function(widget, value) {
-	if (!widget) {return; }
-	widget.text = value.toString();
+var PlaceBoardTool = {
+  id: "toolPlaceBoard",
+  cursor: "cross_hair",
+  
+
+}
+
+var createWidgetsPlayers = function() {}
+
+var createWidgetsAdmin = function() {
+  var btnPlaceBoard = {
+		type: 'button',
+		x: 2,
+		y: 16 + (widgetHeight + 2) * 4,
+		width: 198,
+		height: widgetHeight,
+		name: 'btnPlaceBoard',
+		text: "Place Board",
+		onClick: PlaceBoardTool
+	};
 }
 
 var createWidgets = function() {
-	Widgets = [];
+  Widgets = [];
+  createWidgetsAdmin();
 
-};
-
-var onActionExecute = function(e) {
-	if (network.mode !== "none"/* || e.player === network.currentPlayer*/)
-	{
-
-	}
 };
 
 var openWindow = function() {
